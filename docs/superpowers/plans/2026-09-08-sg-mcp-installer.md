@@ -1,6 +1,6 @@
 # add-sg-mcp Implementation Plan
 
-> The repository has since been renamed to `StackGuardian/stackguardian-mcp`. The npm package and CLI are still `add-sg-mcp`. References below keep the name in use when this plan was written.
+> The repository has since been renamed to `StackGuardian/stackguardian-mcp`, and the npm package to `@stackguardian/mcp-wizard`; the command is still `add-sg-mcp`. References below keep the names in use when this plan was written.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

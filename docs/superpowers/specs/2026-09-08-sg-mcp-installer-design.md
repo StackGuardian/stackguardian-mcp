@@ -4,7 +4,7 @@ Date: 2026-09-08
 Status: approved for implementation (autonomous session; see "Decisions")
 Repo: `StackGuardian/add-sg-mcp` (fork of `neon-solutions/add-mcp` v2.4.0)
 
-> The repository has since been renamed to `StackGuardian/stackguardian-mcp`. The npm package and CLI are still `add-sg-mcp`. References below keep the name in use when this design was written.
+> The repository has since been renamed to `StackGuardian/stackguardian-mcp`, and the npm package to `@stackguardian/mcp-wizard`; the command is still `add-sg-mcp`. References below keep the names in use when this design was written.
 
 ## 1. Goal
 

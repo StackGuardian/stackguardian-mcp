@@ -1,19 +1,17 @@
-> **Fork note:** this pipeline was inherited from upstream `add-mcp`. Before the first release, an npm owner of `add-sg-mcp` must register the Trusted Publisher for the `StackGuardian/stackguardian-mcp` repository and the `release.yml` workflow (see the one-time setup below); nothing publishes until that is done.
+> **Fork note:** this pipeline was inherited from upstream `add-mcp`. The package was published as `add-sg-mcp` up to 1.1.0 and is now `@stackguardian/mcp-wizard`. Before the first release under the new name, an npm owner of `@stackguardian/mcp-wizard` must register the Trusted Publisher for the `StackGuardian/stackguardian-mcp` repository and the `release.yml` workflow (see the one-time setup below); nothing publishes until that is done.
 
-> **Rename note:** the repository was renamed from `StackGuardian/add-sg-mcp` to `StackGuardian/stackguardian-mcp`; the npm package and the CLI keep the name `add-sg-mcp`. GitHub's OIDC tokens carry the repository's current name, so every binding to the old name must be updated: the npm Trusted Publisher (B1), and the trust policy of the AWS role that `binaries.yml` assumes to upload to `dl.stackguardian.io` if it names the repository. Releases up to 1.0.6 were attested under the old name and verify with `gh attestation verify <file> --repo StackGuardian/add-sg-mcp`.
+# Releasing `@stackguardian/mcp-wizard`
 
-# Releasing `add-sg-mcp`
+This document is the authoritative guide for publishing `@stackguardian/mcp-wizard` to npm. It covers the threat model, the one-time setup of the secure publishing pipeline, the per-release runbook, and the break-glass procedure if something goes wrong.
 
-This document is the authoritative guide for publishing `add-sg-mcp` to npm. It covers the threat model, the one-time setup of the secure publishing pipeline, the per-release runbook, and the break-glass procedure if something goes wrong.
-
-`add-sg-mcp` does **not** support publishing from a maintainer's laptop. Every published version must pass through the GitHub Actions release workflow with OIDC trusted publishing, provenance, and a manual stage-approval step on npm.
+`@stackguardian/mcp-wizard` does **not** support publishing from a maintainer's laptop. Every published version must pass through the GitHub Actions release workflow with OIDC trusted publishing, provenance, and a manual stage-approval step on npm.
 
 ## Why
 
 Recent npm supply-chain incidents (Shai-Hulud, repeated maintainer-account takeovers, leaked CI tokens) almost all stem from one root cause: **long-lived npm publish tokens stored somewhere**. The pipeline below removes that root cause and adds two independent gates between "commit on `main`" and "live on the registry":
 
 1. **Click "Publish release" on GitHub** — confirms the commit and version are intentional.
-2. **`npm stage approve add-sg-mcp` with WebAuthn** — confirms the actual tarball CI produced is what should go live.
+2. **`npm stage approve @stackguardian/mcp-wizard` with WebAuthn** — confirms the actual tarball CI produced is what should go live.
 
 Either gate alone is enough to stop a bad publish.
 
@@ -27,8 +25,8 @@ flowchart LR
     ciRun --> oidc["GitHub mints OIDC token (id-token: write)"]
     oidc --> npmStage["npm stage publish --provenance"]
     npmStage --> staging["Package sits in npm staging area"]
-    staging --> review["Maintainer: npm stage view add-sg-mcp"]
-    review --> approve["npm stage approve add-sg-mcp (WebAuthn)"]
+    staging --> review["Maintainer: npm stage view @stackguardian/mcp-wizard"]
+    review --> approve["npm stage approve @stackguardian/mcp-wizard (WebAuthn)"]
     approve --> live["Live on registry.npmjs.org with provenance"]
 ```
 
@@ -51,13 +49,13 @@ Work through these top to bottom. None of them can be automated; they are all in
 > Done under your personal npm user, not the package.
 
 - [ ] **A1.** Enable WebAuthn/passkey 2FA at `https://www.npmjs.com/settings/<your-username>/2fa`. If TOTP is your only second factor, enroll a passkey and then remove TOTP. New TOTP setups are disabled by npm and existing TOTP is being phased out.
-- [ ] **A2.** Revoke every existing publish token at `https://www.npmjs.com/settings/<your-username>/tokens` that grants write access to `add-sg-mcp`. After trusted publishing is configured, nothing should need one.
+- [ ] **A2.** Revoke every existing publish token at `https://www.npmjs.com/settings/<your-username>/tokens` that grants write access to `@stackguardian/mcp-wizard`. After trusted publishing is configured, nothing should need one.
 
 ### B. npm package configuration
 
-> Done on the `add-sg-mcp` package page on npmjs.com.
+> Done on the `@stackguardian/mcp-wizard` package page on npmjs.com.
 
-- [ ] **B1.** Go to `https://www.npmjs.com/package/add-sg-mcp/access`. Under **Trusted Publisher**, click **GitHub Actions** and enter:
+- [ ] **B1.** Go to `https://www.npmjs.com/package/@stackguardian/mcp-wizard/access`. Under **Trusted Publisher**, click **GitHub Actions** and enter:
   - Organization: `StackGuardian`
   - Repository: `stackguardian-mcp`
   - Workflow filename: `release.yml`
@@ -77,7 +75,7 @@ Work through these top to bottom. None of them can be automated; they are all in
 
 ### D. First-release smoke test
 
-- [ ] **D1.** Cut a patch release through the runbook below (e.g. `v1.9.1` with an empty CHANGELOG entry like "internal: validate release pipeline"). Walk through the stage-review step slowly: open the staged tarball on npmjs.com, confirm the file list matches `package.json#files` (`dist/`, `skills/`, `README.md`), confirm the provenance attestation badge appears, then approve. Once the version is live, run `npm audit signatures add-sg-mcp@1.9.1` to verify Sigstore signatures end to end.
+- [ ] **D1.** Cut a patch release through the runbook below (e.g. `v1.9.1` with an empty CHANGELOG entry like "internal: validate release pipeline"). Walk through the stage-review step slowly: open the staged tarball on npmjs.com, confirm the file list matches `package.json#files` (`dist/`, `skills/`, `README.md`), confirm the provenance attestation badge appears, then approve. Once the version is live, run `npm audit signatures @stackguardian/mcp-wizard@1.9.1` to verify Sigstore signatures end to end.
 
 ## Per-release runbook
 
@@ -112,7 +110,7 @@ Follow this every time you ship a new version. The whole sequence is typically 5
 
    ```bash
    npm stage list             # shows pending staged versions for packages you maintain
-   npm stage view add-sg-mcp     # inspect the staged release for add-sg-mcp
+   npm stage view @stackguardian/mcp-wizard     # inspect the staged release for @stackguardian/mcp-wizard
    ```
 
    Verify:
@@ -124,7 +122,7 @@ Follow this every time you ship a new version. The whole sequence is typically 5
 7. **Approve.**
 
    ```bash
-   npm stage approve add-sg-mcp  # prompts for WebAuthn
+   npm stage approve @stackguardian/mcp-wizard  # prompts for WebAuthn
    ```
 
    The package goes live.
@@ -132,22 +130,22 @@ Follow this every time you ship a new version. The whole sequence is typically 5
 8. **Verify it landed correctly.**
 
    ```bash
-   npm view add-sg-mcp version
-   npm view add-sg-mcp dist-tags
-   npm audit signatures add-sg-mcp@X.Y.Z
+   npm view @stackguardian/mcp-wizard version
+   npm view @stackguardian/mcp-wizard dist-tags
+   npm audit signatures @stackguardian/mcp-wizard@X.Y.Z
    ```
 
 9. **If anything looked wrong at step 6, reject instead of approving.**
 
    ```bash
-   npm stage reject add-sg-mcp
+   npm stage reject @stackguardian/mcp-wizard
    ```
 
    Nothing is published. Investigate, fix on a branch, cut a new patch release.
 
 ### Versioning
 
-`add-sg-mcp` follows semver. As a rough guide:
+`@stackguardian/mcp-wizard` follows semver. As a rough guide:
 
 - **patch** — bug fixes, registry adds, internal-only changes that do not alter behaviour.
 - **minor** — new features, new agent support, new flags. Backward-compatible.
@@ -164,7 +162,7 @@ Follow this every time you ship a new version. The whole sequence is typically 5
 
 ### Suspected repository compromise (malicious PR, force-push, etc.)
 
-1. Disable the trusted-publisher binding on `https://www.npmjs.com/package/add-sg-mcp/access` to halt all CI publishes immediately.
+1. Disable the trusted-publisher binding on `https://www.npmjs.com/package/@stackguardian/mcp-wizard/access` to halt all CI publishes immediately.
 2. Audit `main`, the `release.yml` workflow, and the `v*` tag history.
 3. Once clean, re-enable the trusted publisher and ship a clean release.
 
@@ -175,7 +173,7 @@ Note: even without step 1, an attacker cannot directly publish from a PR branch 
 By design you cannot publish from a laptop. The escape hatch:
 
 1. On npmjs.com, **Publishing access** -> flip **"Require two-factor authentication and disallow tokens"** off temporarily.
-2. Create a granular access token with a 7-day expiry scoped to `add-sg-mcp` only.
+2. Create a granular access token with a 7-day expiry scoped to `@stackguardian/mcp-wizard` only.
 3. Publish locally with that token.
 4. Revoke the token immediately.
 5. Flip "Require 2FA and disallow tokens" back on.
