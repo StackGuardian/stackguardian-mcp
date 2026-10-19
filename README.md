@@ -92,7 +92,7 @@ Nothing there? See [Troubleshooting](#troubleshooting).
 
 ## Supported agents
 
-**Claude Code, Cursor, Codex, VS Code (Copilot), Gemini CLI, OpenCode, Windsurf**, plus GitHub Copilot CLI, Kiro CLI, Zed, Cline, Goose, Grok Build, Kilo Code, Kimi Code, Antigravity, Pi, Mastra Code and MCPorter. Run `npx add-sg-mcp list-agents` for the current list and each agent's config file.
+**Claude Code, Cursor, Codex, VS Code (Copilot), Gemini CLI, OpenCode, Windsurf**, plus GitHub Copilot CLI, Kiro CLI, Zed, Cline, Goose, Grok Build, Kilo Code, Kimi Code, Antigravity, Pi, Mastra Code and MCPorter. Run `npx @stackguardian/mcp-wizard list-agents` for the current list and each agent's config file.
 
 Every agent gets the MCP server. Skills are installed into each agent's skills directory where the agent has one; Mastra Code and MCPorter get the server only. How a skill starts differs by agent: Claude Code offers each one as a slash command, and other agents pick up a skill when your request matches it. See [Agent-specific notes](#agent-specific-notes) for other differences.
 
