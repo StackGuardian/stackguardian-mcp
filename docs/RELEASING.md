@@ -75,7 +75,7 @@ Work through these top to bottom. None of them can be automated; they are all in
 
 ### D. First-release smoke test
 
-- [ ] **D1.** Cut a patch release through the runbook below (e.g. `v1.9.1` with an empty CHANGELOG entry like "internal: validate release pipeline"). Walk through the stage-review step slowly: open the staged tarball on npmjs.com, confirm the file list matches `package.json#files` (`dist/`, `README.md`), confirm the provenance attestation badge appears, then approve. Once the version is live, run `npm audit signatures @stackguardian/mcp-wizard@1.9.1` to verify Sigstore signatures end to end.
+- [ ] **D1.** Cut a patch release through the runbook below (e.g. `v1.9.1` with an empty CHANGELOG entry like "internal: validate release pipeline"). Walk through the stage-review step slowly: open the staged tarball on npmjs.com, confirm the file list matches `package.json#files` (`dist/`, `skills/`, `README.md`), confirm the provenance attestation badge appears, then approve. Once the version is live, run `npm audit signatures @stackguardian/mcp-wizard@1.9.1` to verify Sigstore signatures end to end.
 
 ## Per-release runbook
 
@@ -115,7 +115,7 @@ Follow this every time you ship a new version. The whole sequence is typically 5
 
    Verify:
    - The version number matches what you intended.
-   - The file list is exactly `dist/` plus `README.md` (whatever `package.json#files` whitelists), with no surprise files.
+   - The file list is exactly `dist/`, `skills/` and `README.md` (whatever `package.json#files` whitelists), with no surprise files.
    - The shasum matches the workflow run's published artifact.
    - The provenance attestation references the correct commit SHA.
 
@@ -138,7 +138,7 @@ Follow this every time you ship a new version. The whole sequence is typically 5
 9. **If anything looked wrong at step 6, reject instead of approving.**
 
    ```bash
-   npm stage reject add-mcp
+   npm stage reject @stackguardian/mcp-wizard
    ```
 
    Nothing is published. Investigate, fix on a branch, cut a new patch release.
