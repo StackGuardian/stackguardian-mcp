@@ -1,4 +1,4 @@
-# Deploy Terraform, OpenTofu and Ansible with your AI coding agent
+# StackGuardian MCP - Deploy Terraform, OpenTofu and Ansible with your AI coding agent
 
 [![npm](https://img.shields.io/npm/v/@stackguardian/mcp-wizard)](https://www.npmjs.com/package/@stackguardian/mcp-wizard)
 [![CI](https://github.com/StackGuardian/stackguardian-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/StackGuardian/stackguardian-mcp/actions/workflows/ci.yml)
