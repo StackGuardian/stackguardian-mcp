@@ -5,6 +5,8 @@ description: Guided flow for creating a StackGuardian STACK (a bundle of workflo
 
 # Create Stack — Guided Flow
 
+> **Before you start:** this skill needs the StackGuardian MCP server. If no StackGuardian tools are available (for example `search_workflows`), stop. Tell the user to run `npx @stackguardian/mcp-wizard` and restart the agent. Do not call StackGuardian APIs another way.
+
 Create a StackGuardian stack with the `create_stack` tool on the
 StackGuardian MCP server. A stack is a set of workflows created together from
 a **stack template** (library templateType `IAC_GROUP`), plus the template's
@@ -35,7 +37,7 @@ step (Step F).
    production; never silently pick one. (The tool repeats this as a
    `warnings` entry.)
 4. Immediately call `get_marketplace_template_by_id(templateType='IAC_GROUP',
-   templateId=<pinned id>)` and read `WorkflowsConfig.workflows` (a JSON
+templateId=<pinned id>)` and read `WorkflowsConfig.workflows` (a JSON
    string in search results — parse it). Each entry has an `id` (a UUID —
    this is how you address the workflow later) and
    `VCSConfig.iacVCSConfig.iacTemplateId`, the workflow template it runs.
@@ -54,7 +56,7 @@ step (Step F).
    "recommend" arbitrary groups:
    - **Name or keyword**: resolve via
      `search_orchestrator_resources(resourceTypes=['WORKFLOW_GROUP'],
-     searchQuery=<keyword>)`; on a near-miss suggest the closest match. The
+searchQuery=<keyword>)`; on a near-miss suggest the closest match. The
      confirmed pick becomes `wfGrp` — pass EVERYTHING AFTER `/wfgrps/` in its
      `ResourceId` (the id can differ from the display name; the tool accepts
      either and translates a name, but carry the id forward — every later
@@ -66,8 +68,8 @@ step (Step F).
      refuses an unknown group unless this flag is set.
    - **Browse in the dev portal**: share the workflow-groups page —
      `https://app.stackguardian.io/orchestrator/orgs/<org>?tab=workflowGroups`.
-   This step is mandatory — never call `create_stack` without a
-   user-confirmed group.
+     This step is mandatory — never call `create_stack` without a
+     user-confirmed group.
 2. Ask the user for:
    - stack name (`resourceName`, 1–100 chars; its id is the slugified name)
    - optional description (max 512 chars)
@@ -105,7 +107,7 @@ This is the step that differs from a single workflow: **walk the workflows
 one at a time**, in the template's order, and for EACH:
 
 1. Call `get_marketplace_template_by_id(templateType='IAC', templateId=<that
-   workflow's iacTemplateId>)` and decode `InputSchemas` (a LIST; the
+workflow's iacTemplateId>)` and decode `InputSchemas` (a LIST; the
    `FORM_JSONSCHEMA` entry's `encodedData` is base64 JSON Schema; walk
    `properties` — each `default` is what ships if the user says nothing).
 2. Overlay the stack template's stored `iacInputData.data` for that workflow
@@ -153,7 +155,7 @@ workflow the inputs being overridden and the ones accepted as-is. Then call
 The response is `{success, msg, stackId, data: {stack, workflows}, link?,
 warnings?, note}`. Tell the user the stack was created and where
 (`stackId`, and `link` if present) and that **nothing has run yet**. To
-deploy: run the stack's *apply* action from the dashboard link, or run each
+deploy: run the stack's _apply_ action from the dashboard link, or run each
 workflow with `create_workflow_run` in the order the stack's Actions define
 (each `data.workflows[].SubResourceId` is the id those tools take; ask
 before running — `action` is required there and always a user decision).
@@ -161,6 +163,7 @@ before running — `action` is required there and always a user decision).
 ## Error handling (teaching errors)
 
 On error, present the offered options and re-call — do not guess:
+
 - `availableWorkflowGroups` / `availableWorkflowGroupNames` /
   `devPortalWorkflowGroupsUrl` → unknown group (see Step B)
 - `candidateWorkflowGroups` → the name is ambiguous; re-call with the id

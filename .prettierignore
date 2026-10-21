@@ -1,0 +1,2 @@
+# Copies synced from StackGuardian/tirith (scripts/sync-tirith-skills.mjs); formatting them would break the sync check.
+standalone/tirith-*/
