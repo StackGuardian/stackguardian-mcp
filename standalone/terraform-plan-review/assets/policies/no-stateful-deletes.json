@@ -1,0 +1,287 @@
+{
+  "meta": {
+    "version": "v1",
+    "required_provider": "stackguardian/terraform_plan",
+    "name": "no-stateful-deletes",
+    "description": "Fails when the plan deletes or replaces a resource that usually holds data: databases, buckets, disks, file systems and encryption keys. Types not in the plan are skipped."
+  },
+  "evaluators": [
+    {
+      "id": "keep_aws_db_instance",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_db_instance"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_rds_cluster",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_rds_cluster"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_dynamodb_table",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_dynamodb_table"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_s3_bucket",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_s3_bucket"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_efs_file_system",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_efs_file_system"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_ebs_volume",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_ebs_volume"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_elasticache_replication_group",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_elasticache_replication_group"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_docdb_cluster",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_docdb_cluster"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_neptune_cluster",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_neptune_cluster"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_redshift_cluster",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_redshift_cluster"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_opensearch_domain",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_opensearch_domain"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_aws_kms_key",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "aws_kms_key"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_google_sql_database_instance",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "google_sql_database_instance"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_google_storage_bucket",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "google_storage_bucket"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_google_bigquery_dataset",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "google_bigquery_dataset"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_google_spanner_instance",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "google_spanner_instance"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_google_compute_disk",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "google_compute_disk"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_azurerm_mssql_database",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "azurerm_mssql_database"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_azurerm_postgresql_flexible_server",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "azurerm_postgresql_flexible_server"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_azurerm_mysql_flexible_server",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "azurerm_mysql_flexible_server"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_azurerm_cosmosdb_account",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "azurerm_cosmosdb_account"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_azurerm_storage_account",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "azurerm_storage_account"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    },
+    {
+      "id": "keep_azurerm_managed_disk",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "azurerm_managed_disk"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": ["delete"],
+        "error_tolerance": 1
+      }
+    }
+  ],
+  "eval_expression": "keep_aws_db_instance && keep_aws_rds_cluster && keep_aws_dynamodb_table && keep_aws_s3_bucket && keep_aws_efs_file_system && keep_aws_ebs_volume && keep_aws_elasticache_replication_group && keep_aws_docdb_cluster && keep_aws_neptune_cluster && keep_aws_redshift_cluster && keep_aws_opensearch_domain && keep_aws_kms_key && keep_google_sql_database_instance && keep_google_storage_bucket && keep_google_bigquery_dataset && keep_google_spanner_instance && keep_google_compute_disk && keep_azurerm_mssql_database && keep_azurerm_postgresql_flexible_server && keep_azurerm_mysql_flexible_server && keep_azurerm_cosmosdb_account && keep_azurerm_storage_account && keep_azurerm_managed_disk"
+}

@@ -25,7 +25,32 @@
       },
       "githubPath": "standalone/tirith-policies",
       "demoUrl": null,
-      "relatedSlugs": ["sg-create-policy"]
+      "relatedSlugs": ["terraform-plan-review", "sg-create-policy"]
+    },
+    {
+      "slug": "terraform-plan-review",
+      "title": "Terraform Plan Review",
+      "tier": "standalone",
+      "requiresStackGuardian": false,
+      "category": "Review",
+      "summary": "Review a Terraform or OpenTofu plan and flag replacements and deletes before apply.",
+      "description": "Your agent reads a Terraform or OpenTofu plan and explains it before anyone applies it. Bundled Tirith policies flag deletes, replacements and data-holding resources at risk, and the report lists replacements and deletes first, by resource address, with the attribute that forces each replacement. Sensitive values are named, never printed, and the skill never runs apply.",
+      "examplePrompts": [
+        "Review my Terraform plan and flag anything destructive.",
+        "What will this plan delete or replace?"
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "Terraform or OpenTofu",
+        "Python 3.8 or later for Tirith"
+      ],
+      "install": {
+        "skillsCli": "npx skills add https://github.com/StackGuardian/stackguardian-mcp/tree/main/standalone --skill terraform-plan-review",
+        "claudePlugin": "claude plugin install terraform --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "standalone/terraform-plan-review",
+      "demoUrl": null,
+      "relatedSlugs": ["tirith-policies"]
     },
     {
       "slug": "sg-create-workflow",

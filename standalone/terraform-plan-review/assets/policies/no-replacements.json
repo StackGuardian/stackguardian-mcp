@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "version": "v1",
+    "required_provider": "stackguardian/json",
+    "name": "no-replacements",
+    "description": "Fails when the plan replaces any resource, in either order: delete then create, or create then delete."
+  },
+  "evaluators": [
+    {
+      "id": "no_replace",
+      "description": "No resource change has both a delete and a create action",
+      "provider_args": {
+        "operation_type": "get_value",
+        "key_path": "resource_changes.*.change.actions"
+      },
+      "condition": {
+        "type": "NotContainedIn",
+        "value": [
+          ["delete", "create"],
+          ["create", "delete"]
+        ]
+      }
+    }
+  ],
+  "eval_expression": "no_replace"
+}

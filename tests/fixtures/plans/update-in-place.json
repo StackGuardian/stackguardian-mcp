@@ -1,0 +1,119 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.14.0",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_instance.web",
+          "mode": "managed",
+          "type": "aws_instance",
+          "name": "web",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "ami": "ami-0123456789abcdef0",
+            "instance_type": "t3.medium",
+            "tags": {
+              "env": "dev",
+              "owner": "team-b"
+            }
+          },
+          "sensitive_values": {}
+        },
+        {
+          "address": "aws_s3_bucket.logs",
+          "mode": "managed",
+          "type": "aws_s3_bucket",
+          "name": "logs",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "bucket": "example-logs-bucket",
+            "force_destroy": false,
+            "tags": {
+              "env": "dev"
+            }
+          },
+          "sensitive_values": {}
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "aws_instance.web",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "web",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "update"
+        ],
+        "before": {
+          "ami": "ami-0123456789abcdef0",
+          "instance_type": "t3.small",
+          "tags": {
+            "env": "dev",
+            "owner": "team-a"
+          }
+        },
+        "after": {
+          "ami": "ami-0123456789abcdef0",
+          "instance_type": "t3.medium",
+          "tags": {
+            "env": "dev",
+            "owner": "team-b"
+          }
+        },
+        "after_unknown": {},
+        "before_sensitive": {},
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "aws_s3_bucket.logs",
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "logs",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "no-op"
+        ],
+        "before": {
+          "bucket": "example-logs-bucket",
+          "force_destroy": false,
+          "tags": {
+            "env": "dev"
+          }
+        },
+        "after": {
+          "bucket": "example-logs-bucket",
+          "force_destroy": false,
+          "tags": {
+            "env": "dev"
+          }
+        },
+        "after_unknown": {},
+        "before_sensitive": {},
+        "after_sensitive": {}
+      }
+    }
+  ],
+  "output_changes": {},
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "full_name": "registry.terraform.io/hashicorp/aws"
+      }
+    },
+    "root_module": {}
+  },
+  "timestamp": "2026-10-21T12:00:00Z",
+  "applyable": true,
+  "complete": true,
+  "errored": false
+}
