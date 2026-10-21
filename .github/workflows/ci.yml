@@ -33,3 +33,20 @@ jobs:
 
       - name: Build
         run: bun run build
+
+  plan-review-policies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Tirith
+        run: pip install "git+https://github.com/StackGuardian/tirith.git@1.2.1"
+
+      - name: Check the terraform-plan-review policies against the plan fixtures
+        run: python tests/policies/check_plan_review_policies.py

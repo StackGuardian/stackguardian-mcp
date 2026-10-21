@@ -1,0 +1,113 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.14.0",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_db_instance.main",
+          "mode": "managed",
+          "type": "aws_db_instance",
+          "name": "main",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "identifier": "example-db",
+            "engine": "postgres",
+            "engine_version": "16.4",
+            "instance_class": "db.t3.medium",
+            "allocated_storage": 100,
+            "storage_encrypted": false,
+            "kms_key_id": "",
+            "username": "app",
+            "password": "FAKE-SENSITIVE-PASSWORD-0002",
+            "arn": "arn:aws:rds:eu-central-1:123456789012:db:example-db"
+          },
+          "sensitive_values": {
+            "password": true
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "aws_db_instance.main",
+      "mode": "managed",
+      "type": "aws_db_instance",
+      "name": "main",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "update"
+        ],
+        "before": {
+          "identifier": "example-db",
+          "engine": "postgres",
+          "engine_version": "16.4",
+          "instance_class": "db.t3.medium",
+          "allocated_storage": 50,
+          "storage_encrypted": false,
+          "kms_key_id": "",
+          "username": "app",
+          "password": "FAKE-SENSITIVE-PASSWORD-0001",
+          "arn": "arn:aws:rds:eu-central-1:123456789012:db:example-db"
+        },
+        "after": {
+          "identifier": "example-db",
+          "engine": "postgres",
+          "engine_version": "16.4",
+          "instance_class": "db.t3.medium",
+          "allocated_storage": 100,
+          "storage_encrypted": false,
+          "kms_key_id": "",
+          "username": "app",
+          "password": "FAKE-SENSITIVE-PASSWORD-0002",
+          "arn": "arn:aws:rds:eu-central-1:123456789012:db:example-db"
+        },
+        "after_unknown": {},
+        "before_sensitive": {
+          "password": true
+        },
+        "after_sensitive": {
+          "password": true
+        }
+      }
+    }
+  ],
+  "output_changes": {
+    "db_password": {
+      "actions": [
+        "update"
+      ],
+      "before": "FAKE-SENSITIVE-PASSWORD-0001",
+      "after": "FAKE-SENSITIVE-PASSWORD-0002",
+      "after_unknown": false,
+      "before_sensitive": true,
+      "after_sensitive": true
+    },
+    "db_endpoint": {
+      "actions": [
+        "no-op"
+      ],
+      "before": "example-db.abc123.eu-central-1.rds.amazonaws.com:5432",
+      "after": "example-db.abc123.eu-central-1.rds.amazonaws.com:5432",
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "full_name": "registry.terraform.io/hashicorp/aws"
+      }
+    },
+    "root_module": {}
+  },
+  "timestamp": "2026-10-21T12:00:00Z",
+  "applyable": true,
+  "complete": true,
+  "errored": false
+}

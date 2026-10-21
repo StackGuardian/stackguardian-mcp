@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "version": "v1",
+    "required_provider": "stackguardian/terraform_plan",
+    "name": "no-deletes",
+    "description": "Fails when the plan deletes any resource, including a delete that is part of a replacement."
+  },
+  "evaluators": [
+    {
+      "id": "no_delete_action",
+      "description": "Every planned action is something other than delete",
+      "provider_args": {
+        "operation_type": "action",
+        "terraform_resource_type": "*"
+      },
+      "condition": { "type": "NotContainedIn", "value": ["delete"] }
+    }
+  ],
+  "eval_expression": "no_delete_action"
+}

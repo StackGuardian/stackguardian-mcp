@@ -4,7 +4,7 @@
     {
       "title": "Works with any repo",
       "description": "Open source. No account needed.",
-      "skills": ["tirith-policies"]
+      "skills": ["terraform-plan-review", "tirith-policies"]
     },
     {
       "title": "With StackGuardian",
