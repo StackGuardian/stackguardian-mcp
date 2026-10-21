@@ -57,7 +57,7 @@ function frontmatter(skillPath: string): Record<string, unknown> {
   const text = readFileSync(join(repoRoot, skillPath, "SKILL.md"), "utf-8");
   const match = /^---\n([\s\S]*?)\n---\n/.exec(text);
   assert.ok(match, `${skillPath}/SKILL.md has no frontmatter block`);
-  const data = yaml.load(match[1]);
+  const data = yaml.load(match[1] ?? "");
   assert.ok(
     data && typeof data === "object",
     `${skillPath}/SKILL.md frontmatter is not a mapping`,
@@ -76,9 +76,9 @@ function markdownFiles(dir: string): string[] {
 function relativeLinks(markdown: string): string[] {
   const prose = markdown.replace(/```[\s\S]*?```/g, "");
   return [...prose.matchAll(/\]\(([^)\s]+)\)/g)]
-    .map((m) => m[1])
+    .map((m) => m[1] ?? "")
     .filter((target) => !/^(https?:|mailto:|#)/.test(target))
-    .map((target) => decodeURIComponent(target.split("#")[0]));
+    .map((target) => decodeURIComponent(target.split("#")[0] ?? ""));
 }
 
 type CatalogEntry = {
