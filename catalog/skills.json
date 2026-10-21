@@ -14,14 +14,14 @@
         "Add a Tirith check to our GitHub Actions workflow before terraform apply.",
         "Why did the Tirith step fail in CI?"
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "Terraform or OpenTofu",
         "Python 3.8 or later for Tirith"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add https://github.com/StackGuardian/stackguardian-mcp/tree/main/standalone --skill tirith-policies",
+        "claudePlugin": "claude plugin install terraform --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "standalone/tirith-policies",
       "demoUrl": null,
@@ -40,14 +40,14 @@
         "Create an OpenTofu workflow from our repo that needs approval before every apply.",
         "Set up a workflow that runs our Ansible playbook as a custom step."
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-create-workflow",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "skills/sg-create-workflow",
       "demoUrl": null,
@@ -70,14 +70,14 @@
         "Require approval from alice@example.com or bob@example.com before prod-vpc applies.",
         "prod-vpc runs keep running out of memory. Give them 4 GB."
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-update-workflow",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "skills/sg-update-workflow",
       "demoUrl": null,
@@ -96,14 +96,14 @@
         "What would change if I moved prod-vpc to revision 5 of its template?",
         "Roll prod-vpc back to the previous template revision."
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-upgrade-workflow",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "skills/sg-upgrade-workflow",
       "demoUrl": null,
@@ -121,14 +121,14 @@
         "Find a stack template that sets up a VPC, a security group and an EC2 instance.",
         "Create a stack from that template in the staging group with our AWS staging connector."
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-create-stack",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "skills/sg-create-stack",
       "demoUrl": null,
@@ -146,14 +146,14 @@
         "Block any deployment in the prod group that makes an S3 bucket public.",
         "Warn when the estimated monthly cost of an EC2 instance goes over $100."
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-create-policy",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "skills/sg-create-policy",
       "demoUrl": null,
@@ -172,14 +172,14 @@
         "Rotate the DB_PASSWORD secret.",
         "Delete the OLD_API_KEY secret. Which workflows still use it?"
       ],
-      "supportedAgents": [],
+      "supportedAgents": ["Claude Code"],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
       ],
       "install": {
-        "skillsCli": null,
-        "claudePlugin": null
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-manage-secrets",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
       },
       "githubPath": "skills/sg-manage-secrets",
       "demoUrl": null,
