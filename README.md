@@ -10,8 +10,8 @@ Review Terraform changes, gate them with policy and deploy from Claude Code, Cur
 
 |                        | Works with any repo                                                                                                                                                                                | With StackGuardian                                                                                                                     |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Skills                 | [`terraform-plan-review`](standalone/terraform-plan-review/SKILL.md), [`tirith-policies`](standalone/tirith-policies/SKILL.md)                                                                     | [Six `sg-*` skills](#mcp-and-skills) for workflows, stacks, policies and secrets                                                       |
-| What your agent can do | Review a Terraform or OpenTofu plan before apply, with replacements and deletes first, and write and run [Tirith](https://github.com/StackGuardian/tirith) policy checks on your plans, also in CI | Create and run deployment workflows, require approvals, add policies and find out why a run failed, in your StackGuardian organization |
+| Skills                 | [`terraform-plan-review`](standalone/terraform-plan-review/SKILL.md), [`terraform-deploy`](standalone/terraform-deploy/SKILL.md), [`tirith-policies`](standalone/tirith-policies/SKILL.md)                                                                     | [Six `sg-*` skills](#mcp-and-skills) for workflows, stacks, policies and secrets                                                       |
+| What your agent can do | Review a Terraform or OpenTofu plan before apply, with replacements and deletes first; plan and apply with a separate approval for the exact plan; and write and run [Tirith](https://github.com/StackGuardian/tirith) policy checks on your plans, also in CI | Create and run deployment workflows, require approvals, add policies and find out why a run failed, in your StackGuardian organization |
 | You need               | Terraform or OpenTofu, and Python 3.8 or later for Tirith. No account.                                                                                                                             | A StackGuardian account and the StackGuardian MCP server                                                                               |
 | Install                | [`npx skills add …`](#works-with-any-repo)                                                                                                                                                         | [`npx @stackguardian/mcp-wizard`](#with-stackguardian)                                                                                 |
 
@@ -32,6 +32,8 @@ claude plugin install terraform --marketplace StackGuardian/stackguardian-mcp
 **Then try asking your agent:**
 
 > Review my Terraform plan and flag anything destructive.
+
+> Deploy this Terraform to the dev workspace, and let me review the plan before you apply it.
 
 > Write a Tirith policy that fails the plan if any S3 bucket is public, and test it against our plan.
 

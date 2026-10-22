@@ -4,7 +4,11 @@
     {
       "title": "Works with any repo",
       "description": "Open source. No account needed.",
-      "skills": ["terraform-plan-review", "tirith-policies"]
+      "skills": [
+        "terraform-plan-review",
+        "terraform-deploy",
+        "tirith-policies"
+      ]
     },
     {
       "title": "With StackGuardian",

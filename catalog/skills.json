@@ -14,7 +14,9 @@
         "Add a Tirith check to our GitHub Actions workflow before terraform apply.",
         "Why did the Tirith step fail in CI?"
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "Terraform or OpenTofu",
         "Python 3.8 or later for Tirith"
@@ -25,7 +27,10 @@
       },
       "githubPath": "standalone/tirith-policies",
       "demoUrl": null,
-      "relatedSlugs": ["terraform-plan-review", "sg-create-policy"]
+      "relatedSlugs": [
+        "terraform-plan-review",
+        "sg-create-policy"
+      ]
     },
     {
       "slug": "terraform-plan-review",
@@ -39,7 +44,9 @@
         "Review my Terraform plan and flag anything destructive.",
         "What will this plan delete or replace?"
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "Terraform or OpenTofu",
         "Python 3.8 or later for Tirith"
@@ -50,7 +57,40 @@
       },
       "githubPath": "standalone/terraform-plan-review",
       "demoUrl": null,
-      "relatedSlugs": ["tirith-policies"]
+      "relatedSlugs": [
+        "terraform-deploy",
+        "tirith-policies"
+      ]
+    },
+    {
+      "slug": "terraform-deploy",
+      "title": "Terraform Deploy",
+      "tier": "standalone",
+      "requiresStackGuardian": false,
+      "category": "Deploy",
+      "summary": "Plan and apply Terraform or OpenTofu from your coding agent, with a separate approval before applying the exact plan you reviewed.",
+      "description": "Your agent finds the root module, backend and workspace, confirms the target with you, and runs init and plan. It reviews the saved plan with the terraform-plan-review skill and applies only that plan file, after you approve it in a separate question. It never uses -auto-approve, destroy or state commands, and asks twice when the target looks like production.",
+      "examplePrompts": [
+        "Deploy this Terraform to the dev workspace.",
+        "Plan and apply the changes in envs/staging, but let me review the plan first."
+      ],
+      "supportedAgents": [
+        "Claude Code"
+      ],
+      "prerequisites": [
+        "Terraform or OpenTofu",
+        "Credentials for the provider your configuration uses"
+      ],
+      "install": {
+        "skillsCli": "npx skills add https://github.com/StackGuardian/stackguardian-mcp/tree/main/standalone --skill terraform-deploy --skill terraform-plan-review",
+        "claudePlugin": "claude plugin install terraform --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "standalone/terraform-deploy",
+      "demoUrl": null,
+      "relatedSlugs": [
+        "terraform-plan-review",
+        "sg-create-workflow"
+      ]
     },
     {
       "slug": "sg-create-workflow",
@@ -65,7 +105,9 @@
         "Create an OpenTofu workflow from our repo that needs approval before every apply.",
         "Set up a workflow that runs our Ansible playbook as a custom step."
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
@@ -95,7 +137,9 @@
         "Require approval from alice@example.com or bob@example.com before prod-vpc applies.",
         "prod-vpc runs keep running out of memory. Give them 4 GB."
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
@@ -106,7 +150,10 @@
       },
       "githubPath": "skills/sg-update-workflow",
       "demoUrl": null,
-      "relatedSlugs": ["sg-create-workflow", "sg-upgrade-workflow"]
+      "relatedSlugs": [
+        "sg-create-workflow",
+        "sg-upgrade-workflow"
+      ]
     },
     {
       "slug": "sg-upgrade-workflow",
@@ -121,7 +168,9 @@
         "What would change if I moved prod-vpc to revision 5 of its template?",
         "Roll prod-vpc back to the previous template revision."
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
@@ -132,7 +181,10 @@
       },
       "githubPath": "skills/sg-upgrade-workflow",
       "demoUrl": null,
-      "relatedSlugs": ["sg-update-workflow", "sg-create-workflow"]
+      "relatedSlugs": [
+        "sg-update-workflow",
+        "sg-create-workflow"
+      ]
     },
     {
       "slug": "sg-create-stack",
@@ -146,7 +198,9 @@
         "Find a stack template that sets up a VPC, a security group and an EC2 instance.",
         "Create a stack from that template in the staging group with our AWS staging connector."
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
@@ -157,7 +211,10 @@
       },
       "githubPath": "skills/sg-create-stack",
       "demoUrl": null,
-      "relatedSlugs": ["sg-create-workflow", "sg-create-policy"]
+      "relatedSlugs": [
+        "sg-create-workflow",
+        "sg-create-policy"
+      ]
     },
     {
       "slug": "sg-create-policy",
@@ -171,7 +228,9 @@
         "Block any deployment in the prod group that makes an S3 bucket public.",
         "Warn when the estimated monthly cost of an EC2 instance goes over $100."
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
@@ -182,7 +241,10 @@
       },
       "githubPath": "skills/sg-create-policy",
       "demoUrl": null,
-      "relatedSlugs": ["tirith-policies", "sg-create-workflow"]
+      "relatedSlugs": [
+        "tirith-policies",
+        "sg-create-workflow"
+      ]
     },
     {
       "slug": "sg-manage-secrets",
@@ -197,7 +259,9 @@
         "Rotate the DB_PASSWORD secret.",
         "Delete the OLD_API_KEY secret. Which workflows still use it?"
       ],
-      "supportedAgents": ["Claude Code"],
+      "supportedAgents": [
+        "Claude Code"
+      ],
       "prerequisites": [
         "A StackGuardian account",
         "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
@@ -208,7 +272,10 @@
       },
       "githubPath": "skills/sg-manage-secrets",
       "demoUrl": null,
-      "relatedSlugs": ["sg-create-workflow", "sg-update-workflow"]
+      "relatedSlugs": [
+        "sg-create-workflow",
+        "sg-update-workflow"
+      ]
     }
   ]
 }
