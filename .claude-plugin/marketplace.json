@@ -1,0 +1,22 @@
+{
+  "name": "stackguardian",
+  "owner": {
+    "name": "StackGuardian",
+    "url": "https://www.stackguardian.io"
+  },
+  "description": "Agent skills for Terraform and OpenTofu, and for StackGuardian.",
+  "plugins": [
+    {
+      "name": "terraform",
+      "source": ".",
+      "description": "Terraform and OpenTofu skills that work in any repository and need no StackGuardian account.",
+      "skills": ["./standalone"]
+    },
+    {
+      "name": "stackguardian",
+      "source": ".",
+      "description": "Create and manage StackGuardian workflows, stacks, policies and secrets. Needs the StackGuardian MCP server: run npx @stackguardian/mcp-wizard.",
+      "skills": ["./skills"]
+    }
+  ]
+}

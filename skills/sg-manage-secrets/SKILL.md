@@ -5,6 +5,8 @@ description: Guided flow for creating, rotating and deleting StackGuardian vault
 
 # Manage Secrets — Guided Flow
 
+> **Before you start:** this skill needs the StackGuardian MCP server. If no StackGuardian tools are available (for example `search_workflows`), stop. Tell the user to run `npx @stackguardian/mcp-wizard` and restart the agent. Do not call StackGuardian APIs another way.
+
 A StackGuardian secret is an org-wide, KMS-encrypted vault entry with a
 name and a value. It has no description, tags or type, and its value can
 never be read back. Workflows use it by reference. Follow the steps IN
@@ -47,7 +49,7 @@ to the user; speak of "the secret's name" and "the value".
 ## Step B — Rotate
 
 1. Find the exact name: `search_orchestrator_resources(resourceTypes=['SECRET'],
-   searchQuery=<hint>)`, or use the `availableSecrets` list a tool error
+searchQuery=<hint>)`, or use the `availableSecrets` list a tool error
    returns. Names are case-sensitive.
 2. Ask for the new value and call
    `update_secret(resourceName=<name>, secret={"value": <value>})`.

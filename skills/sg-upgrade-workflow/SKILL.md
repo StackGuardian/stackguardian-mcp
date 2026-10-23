@@ -5,6 +5,8 @@ description: Guided flow for upgrading (or downgrading) an existing StackGuardia
 
 # Upgrade Workflow — Guided Flow
 
+> **Before you start:** this skill needs the StackGuardian MCP server. If no StackGuardian tools are available (for example `search_workflows`), stop. Tell the user to run `npx @stackguardian/mcp-wizard` and restart the agent. Do not call StackGuardian APIs another way.
+
 Move an existing workflow to a different template revision with the
 StackGuardian MCP `update_workflow` tool (using its `upgradeMode` +
 `dryRun`). This is a SEPARATE flow from a normal settings edit: an upgrade
@@ -40,6 +42,7 @@ gives `wfGrp="platform/eu"`, not `"platform"`.
 ## Step C — Choose the upgrade mode
 
 Explain the two modes plainly and let the user choose:
+
 - **Keep my settings** (`upgradeMode="PRESERVE_SETTINGS"`) — upgrade the code but
   preserve the customizations the user made on this workflow (e.g. extra
   approvers, a pinned Terraform version). New env-var keys from the template are
@@ -55,6 +58,7 @@ Call `update_workflow` with `dryRun=true`:
 "templateId":"<new rev>"}, upgradeMode=<mode>, dryRun=true)`.
 
 This mutates nothing. Present the returned `preview` to the user:
+
 - `summary` — how many settings are added / modified / removed.
 - `changes` — the specific before/after per key.
 - `reviewDimensions` — the four things worth reviewing: template **iacInputs**,

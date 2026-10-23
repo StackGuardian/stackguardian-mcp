@@ -1,0 +1,22 @@
+{
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Works with any repo",
+      "description": "Open source. No account needed.",
+      "skills": ["tirith-policies"]
+    },
+    {
+      "title": "With StackGuardian",
+      "description": "Needs the StackGuardian MCP server: npx @stackguardian/mcp-wizard",
+      "skills": [
+        "sg-create-workflow",
+        "sg-update-workflow",
+        "sg-upgrade-workflow",
+        "sg-create-stack",
+        "sg-create-policy",
+        "sg-manage-secrets"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "skills": [
+    {
+      "slug": "tirith-policies",
+      "title": "Tirith Policies",
+      "tier": "standalone",
+      "requiresStackGuardian": false,
+      "category": "Policy",
+      "summary": "Write, validate and run Tirith policy-as-code checks on Terraform and OpenTofu plans, and add them to a CI pipeline.",
+      "description": "Tirith checks the plan your pipeline already produces against JSON policies and exits non-zero when a change breaks one. This skill helps your agent write those policies, run them against a document that should fail, read Tirith's results and exit codes, and add the check to GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, Azure DevOps or CircleCI.",
+      "examplePrompts": [
+        "Write a Tirith policy that fails the plan if any S3 bucket is public.",
+        "Add a Tirith check to our GitHub Actions workflow before terraform apply.",
+        "Why did the Tirith step fail in CI?"
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "Terraform or OpenTofu",
+        "Python 3.8 or later for Tirith"
+      ],
+      "install": {
+        "skillsCli": "npx skills add https://github.com/StackGuardian/stackguardian-mcp/tree/main/standalone --skill tirith-policies",
+        "claudePlugin": "claude plugin install terraform --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "standalone/tirith-policies",
+      "demoUrl": null,
+      "relatedSlugs": ["sg-create-policy"]
+    },
+    {
+      "slug": "sg-create-workflow",
+      "title": "Create a StackGuardian Workflow",
+      "tier": "platform",
+      "requiresStackGuardian": true,
+      "category": "Platform",
+      "summary": "Create a StackGuardian workflow for Terraform, OpenTofu or a custom step pipeline, from your git repository or a library template.",
+      "description": "Your agent asks whether the code comes from your own git repository or a StackGuardian library template, then walks you through the workflow group, cloud connector, variables and template inputs. You see every input with the value that will be used before anything is created. Creating a workflow does not deploy anything; a deployment happens when a run starts.",
+      "examplePrompts": [
+        "Create a workflow for the Terraform in github.com/acme/infra, folder envs/staging, branch main.",
+        "Create an OpenTofu workflow from our repo that needs approval before every apply.",
+        "Set up a workflow that runs our Ansible playbook as a custom step."
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "A StackGuardian account",
+        "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
+      ],
+      "install": {
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-create-workflow",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "skills/sg-create-workflow",
+      "demoUrl": null,
+      "relatedSlugs": [
+        "sg-update-workflow",
+        "sg-upgrade-workflow",
+        "sg-create-stack"
+      ]
+    },
+    {
+      "slug": "sg-update-workflow",
+      "title": "Update a StackGuardian Workflow",
+      "tier": "platform",
+      "requiresStackGuardian": true,
+      "category": "Platform",
+      "summary": "Change an existing StackGuardian workflow's connector, variables, schedules, approvals, runner or sizing. Only what you change is touched.",
+      "description": "Your agent finds the workflow, confirms it is the one you mean, and changes only the settings you ask for. For settings saved as a whole list, such as tags or schedules, it reads the current list first so adding one entry keeps the others. You confirm a summary before anything changes.",
+      "examplePrompts": [
+        "Add a nightly 2 AM schedule to prod-vpc.",
+        "Require approval from alice@example.com or bob@example.com before prod-vpc applies.",
+        "prod-vpc runs keep running out of memory. Give them 4 GB."
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "A StackGuardian account",
+        "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
+      ],
+      "install": {
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-update-workflow",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "skills/sg-update-workflow",
+      "demoUrl": null,
+      "relatedSlugs": ["sg-create-workflow", "sg-upgrade-workflow"]
+    },
+    {
+      "slug": "sg-upgrade-workflow",
+      "title": "Upgrade a StackGuardian Workflow",
+      "tier": "platform",
+      "requiresStackGuardian": true,
+      "category": "Platform",
+      "summary": "Move a StackGuardian workflow to another template revision, with a dry run that shows every change first.",
+      "description": "Your agent finds the workflow and the revision to move to, and asks whether to keep your settings or reset to the template. A dry run shows how many settings would be added, changed or removed before anything is applied. You review template inputs, environment variables, the cloud connector and custom step settings, then confirm.",
+      "examplePrompts": [
+        "Upgrade prod-vpc to the latest revision of its template.",
+        "What would change if I moved prod-vpc to revision 5 of its template?",
+        "Roll prod-vpc back to the previous template revision."
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "A StackGuardian account",
+        "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
+      ],
+      "install": {
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-upgrade-workflow",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "skills/sg-upgrade-workflow",
+      "demoUrl": null,
+      "relatedSlugs": ["sg-update-workflow", "sg-create-workflow"]
+    },
+    {
+      "slug": "sg-create-stack",
+      "title": "Create a StackGuardian Stack",
+      "tier": "platform",
+      "requiresStackGuardian": true,
+      "category": "Platform",
+      "summary": "Create several related StackGuardian workflows together from a stack template, reviewing each workflow's inputs.",
+      "description": "Your agent helps you pick a stack template, then walks through each workflow's inputs one workflow at a time. Inputs that come from another workflow's output are filled in for you, and the agent says where each one comes from. Creating a stack does not deploy anything until you start it.",
+      "examplePrompts": [
+        "Find a stack template that sets up a VPC, a security group and an EC2 instance.",
+        "Create a stack from that template in the staging group with our AWS staging connector."
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "A StackGuardian account",
+        "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
+      ],
+      "install": {
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-create-stack",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "skills/sg-create-stack",
+      "demoUrl": null,
+      "relatedSlugs": ["sg-create-workflow", "sg-create-policy"]
+    },
+    {
+      "slug": "sg-create-policy",
+      "title": "Create a StackGuardian Policy",
+      "tier": "platform",
+      "requiresStackGuardian": true,
+      "category": "Platform",
+      "summary": "Add a StackGuardian guardrail that blocks, warns on or requires approval for infrastructure changes.",
+      "description": "Your agent offers a library policy template when one fits, a Tirith rule it writes and explains back to you, or your own git repository of Rego or Tirith policies. You choose what happens when a rule fails, where the policy applies and who can approve. An organization-wide policy is confirmed explicitly.",
+      "examplePrompts": [
+        "Block any deployment in the prod group that makes an S3 bucket public.",
+        "Warn when the estimated monthly cost of an EC2 instance goes over $100."
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "A StackGuardian account",
+        "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
+      ],
+      "install": {
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-create-policy",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "skills/sg-create-policy",
+      "demoUrl": null,
+      "relatedSlugs": ["tirith-policies", "sg-create-workflow"]
+    },
+    {
+      "slug": "sg-manage-secrets",
+      "title": "Manage StackGuardian Secrets",
+      "tier": "platform",
+      "requiresStackGuardian": true,
+      "category": "Platform",
+      "summary": "Store, rotate or delete StackGuardian vault secrets and use them in workflows.",
+      "description": "Your agent stores a token, password or key in the StackGuardian vault and shows you how workflows refer to it by name. Before deleting a secret, it lists the workflows that mention it and deletes only after you agree. A secret's value can't be read back, only replaced.",
+      "examplePrompts": [
+        "Store a GitHub token as a secret called GITHUB_TOKEN.",
+        "Rotate the DB_PASSWORD secret.",
+        "Delete the OLD_API_KEY secret. Which workflows still use it?"
+      ],
+      "supportedAgents": ["Claude Code"],
+      "prerequisites": [
+        "A StackGuardian account",
+        "The StackGuardian MCP server: npx @stackguardian/mcp-wizard"
+      ],
+      "install": {
+        "skillsCli": "npx skills add StackGuardian/stackguardian-mcp --skill sg-manage-secrets",
+        "claudePlugin": "claude plugin install stackguardian --marketplace StackGuardian/stackguardian-mcp"
+      },
+      "githubPath": "skills/sg-manage-secrets",
+      "demoUrl": null,
+      "relatedSlugs": ["sg-create-workflow", "sg-update-workflow"]
+    }
+  ]
+}

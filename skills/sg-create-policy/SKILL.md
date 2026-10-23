@@ -5,6 +5,8 @@ description: Guided flow for creating (and adjusting) a StackGuardian policy wit
 
 # Create Policy — Guided Flow
 
+> **Before you start:** this skill needs the StackGuardian MCP server. If no StackGuardian tools are available (for example `search_workflows`), stop. Tell the user to run `npx @stackguardian/mcp-wizard` and restart the agent. Do not call StackGuardian APIs another way.
+
 Create a StackGuardian policy with the `create_policy` tool.
 Follow the steps IN ORDER. Never ask the user to type ids from memory —
 fetch options with the listed tools and present choices. In user-facing
@@ -47,14 +49,16 @@ Rule `name` is a slug (letters, digits, `_`, `-`).
 ## Step B — What happens when a rule trips?
 
 Ask per rule and set `onFail`:
+
 - "block the deployment" → `FAIL`
 - "just warn" → `WARN`
 - "pause for someone to approve" → `APPROVAL_REQUIRED` → go to Step D
-Leave `onPass` as `PASS` unless the user explicitly wants otherwise.
+  Leave `onPass` as `PASS` unless the user explicitly wants otherwise.
 
 ## Step C — Where does it apply?
 
 Offer exactly these options and set `enforcedOn`:
+
 - **Whole organization** → `["*"]`. Confirm explicitly: it applies to every
   workflow and stack.
 - **Workflow group(s)** → resolve with
@@ -92,10 +96,11 @@ and re-call — never guess.
 ## Adjusting a policy later
 
 Use `update_policy(policyId, ...)`:
+
 - change scope: `addEnforcedOn` / `removeEnforcedOn` (or `enforcedOn` to
   replace the whole scope);
 - change rules: `addRules` / `replaceRules` (by rule name) / `removeRules`;
 - change approvers: `approvers` + `numberOfApprovalsRequired` together;
 - rename / describe / tag: `resourceName`, `description`, `tags`.
-The response's `changed` map shows exactly what moved. Find the policy
-first with `search_policies`.
+  The response's `changed` map shows exactly what moved. Find the policy
+  first with `search_policies`.

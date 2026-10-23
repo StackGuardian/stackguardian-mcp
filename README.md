@@ -1,4 +1,4 @@
-# StackGuardian MCP - Deploy Terraform, OpenTofu and Ansible with your AI coding agent
+# Deploy Terraform with AI, without losing control
 
 [![npm](https://img.shields.io/npm/v/@stackguardian/mcp-wizard)](https://www.npmjs.com/package/@stackguardian/mcp-wizard)
 [![CI](https://github.com/StackGuardian/stackguardian-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/StackGuardian/stackguardian-mcp/actions/workflows/ci.yml)
@@ -6,9 +6,38 @@
 [![MCP](https://img.shields.io/badge/MCP-compatible-blue)](https://modelcontextprotocol.io)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-included-blue)](skills/README.md)
 
-One-command MCP setup and ready-to-use agent skills for Claude Code, Cursor, Codex and [more](#supported-agents).
+Review Terraform changes, gate them with policy and deploy from Claude Code, Cursor or Codex. Start locally; add managed execution, approvals and run history when your team needs them.
 
-Connect your coding agent to [StackGuardian](https://www.stackguardian.io), the platform that runs and governs your infrastructure deployments. Then ask in plain language to turn your existing infrastructure code into deployment workflows, review changes, require approvals, add policies and find out why a run failed.
+|                        | Works with any repo                                                                                                                    | With StackGuardian                                                                                                                     |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Skills                 | [`tirith-policies`](standalone/tirith-policies/SKILL.md)                                                                               | [Six `sg-*` skills](#mcp-and-skills) for workflows, stacks, policies and secrets                                                       |
+| What your agent can do | Write and run [Tirith](https://github.com/StackGuardian/tirith) policy checks on your Terraform and OpenTofu plans, and add them to CI | Create and run deployment workflows, require approvals, add policies and find out why a run failed, in your StackGuardian organization |
+| You need               | Terraform or OpenTofu, and Python 3.8 or later for Tirith. No account.                                                                 | A StackGuardian account and the StackGuardian MCP server                                                                               |
+| Install                | [`npx skills add …`](#works-with-any-repo)                                                                                             | [`npx @stackguardian/mcp-wizard`](#with-stackguardian)                                                                                 |
+
+## Works with any repo
+
+Install the standalone skills with the [skills CLI](https://github.com/vercel-labs/skills). It asks which agents to install to; add `-a claude-code`, `-a cursor` or `-a codex` to choose, and `-g` to install for your user instead of the current project.
+
+```bash
+npx skills add https://github.com/StackGuardian/stackguardian-mcp/tree/main/standalone
+```
+
+In Claude Code you can install them as a plugin instead:
+
+```bash
+claude plugin install terraform --marketplace StackGuardian/stackguardian-mcp
+```
+
+**Then try asking your agent:**
+
+> Write a Tirith policy that fails the plan if any S3 bucket is public, and test it against our plan.
+
+> Add a Tirith check to our GitHub Actions workflow before `terraform apply`.
+
+## With StackGuardian
+
+Connect your coding agent to [StackGuardian](https://www.stackguardian.io), the platform that runs and governs your infrastructure deployments. One command adds the StackGuardian MCP server to your agents and installs the six `sg-*` skills:
 
 ```bash
 npx @stackguardian/mcp-wizard
@@ -26,7 +55,7 @@ No Node.js? Use the [one-line installer](#install) for macOS, Linux or Windows.
 
 [Get started](#get-started) · [Supported agents](#supported-agents) · [Skills](#mcp-and-skills) · [Skills guide](skills/README.md)
 
-## What you can do
+### What you can do with StackGuardian
 
 | Goal                           | Ask your agent, for example                                                                          | What happens                                                                                                                                                                     |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
