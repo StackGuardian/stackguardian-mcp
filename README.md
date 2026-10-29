@@ -303,6 +303,19 @@ The executables are not yet notarized by Apple or code-signed for Windows. The i
 - The CLI accepts a callback only when its one-time `state` matches, and sends the code and the credential only to API hosts under `stackguardian.io` (or `localhost`, for local development).
 - `status` never prints the key or the grant token in full; the callback page strips the one-time code from the browser history, and the grant flow keeps its PKCE verifier off the front channel (only the one-time code travels through the browser).
 
+### Usage analytics
+
+The connect flow and `login` send four events to StackGuardian's PostHog (EU), so we can see where installs stop:
+
+- `mcp_install_started`: the command and the sign-in mode.
+- `mcp_install_logged_in`: the organization and region you signed in to, and whether a saved credential was reused.
+- `mcp_install_login_failed`: the error code when the browser sign-in does not finish (for example `cancelled` or `timeout`).
+- `mcp_install_completed`: the agents that got the server, the scope, the organization and region.
+
+Each event also carries the CLI version, OS, CPU architecture and whether it ran in CI. Events are tied to a random ID stored in `~/.config/add-sg-mcp/telemetry-id`. They never include the API key, the grant token, file paths or error messages. A failed or slow request never stops the install.
+
+To turn it off, set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1`.
+
 ## Contributing
 
 Pull requests are welcome: fixes to the installer, support for more agents, and improvements to the skills in [`skills/`](skills/). For a problem with your StackGuardian account or the hosted MCP server, contact support@stackguardian.io.

@@ -41,13 +41,14 @@ import {
   type SgCredentials,
 } from "./credentials.js";
 import { LoginError } from "./auth.js";
-import { loginViaGrant, revokeGrant } from "./oauth.js";
+import { OAuthError, loginViaGrant, revokeGrant } from "./oauth.js";
 import {
   SG_SKILL_NAMES,
   installSkills,
   removeSkills,
   skillsStatus,
 } from "./skills.js";
+import { track } from "./telemetry.js";
 import type { InstallOutcome, MainOptions } from "./types.js";
 
 export interface SgAuthOptions {
@@ -123,6 +124,20 @@ function grantValidity(credentials: SgCredentials): string {
   const at = Date.parse(credentials.expiresAt);
   if (!Number.isFinite(at)) return "invalid expiry";
   return `${isExpired(credentials) ? "expired" : "expires"} ${new Date(at).toLocaleString()}`;
+}
+
+function regionOf(apiBase: string): string {
+  return SG_ENVIRONMENTS.find((env) => env.apiBase === apiBase)?.id ?? "custom";
+}
+
+/** Funnel step 2: a credential is in hand, fresh or reused from an earlier run. */
+function trackLoggedIn(credentials: SgCredentials, reused: boolean): void {
+  void track("mcp_install_logged_in", {
+    auth_mode: credentials.authType,
+    reused_saved_credential: reused,
+    sg_org: credentials.org,
+    sg_region: regionOf(credentials.apiBase),
+  });
 }
 
 async function chooseRegion(showQa?: boolean): Promise<string> {
@@ -210,6 +225,7 @@ async function credentialsFromToken(
   p.log.success(
     `Saved credentials for ${chalk.cyan(org)} to ${shortenHome(path)}`,
   );
+  trackLoggedIn(credentials, false);
   return credentials;
 }
 
@@ -258,6 +274,7 @@ async function credentialsFromGrant(
     p.log.info(
       `Using the saved grant for ${chalk.cyan(saved.org)} (${saved.dashboardUrl || saved.apiBase}). Run ${chalk.cyan(`${CLI_COMMAND} logout`)} first to request a new one.`,
     );
+    trackLoggedIn(saved, true);
     return saved;
   }
 
@@ -289,6 +306,17 @@ async function credentialsFromGrant(
     });
   } catch (error) {
     spinner.stop("The grant was not issued");
+    // Codes only, never the message: it can echo broker or user input.
+    await track("mcp_install_login_failed", {
+      auth_mode: "grant",
+      reason:
+        error instanceof LoginError
+          ? error.code
+          : error instanceof OAuthError
+            ? error.error
+            : "error",
+      sg_region: regionOf(apiBase),
+    });
     if (error instanceof LoginError && error.code === "cancelled") {
       fail("Cancelled in the browser.");
     }
@@ -314,6 +342,7 @@ async function credentialsFromGrant(
   };
   const path = writeCredentials(credentials);
   p.log.info(`Credentials saved to ${shortenHome(path)}`);
+  trackLoggedIn(credentials, false);
   return credentials;
 }
 
@@ -350,6 +379,7 @@ export async function resolveCredentials(
       p.log.info(
         `Using saved credentials for ${chalk.cyan(saved.org)} (${saved.dashboardUrl || saved.apiBase}). Run ${chalk.cyan(`${CLI_COMMAND} login`)} to switch.`,
       );
+      trackLoggedIn(saved, true);
       return saved;
     }
   }
@@ -493,6 +523,7 @@ function reportSkills(
 
 /** What the install step needs to know about the server it writes. */
 interface SgInstallTarget {
+  authMode: "apikey" | "grant" | "oauth";
   apiBase: string;
   org: string;
   headers: string[];
@@ -501,6 +532,7 @@ interface SgInstallTarget {
 
 function installTargetFor(credentials: SgCredentials): SgInstallTarget {
   return {
+    authMode: credentials.authType,
     apiBase: credentials.apiBase,
     org: credentials.org,
     headers: [buildAuthHeader(credentials)],
@@ -516,6 +548,20 @@ function warnProjectScope(options: SgInstallOptions): void {
   }
 }
 
+/** Funnel step 1, awaited: an early `fail` or Ctrl-C exits the process before a pending request lands. */
+async function trackStarted(
+  command: "connect" | "login",
+  auth: string,
+  options: SgConnectOptions,
+): Promise<void> {
+  await track("mcp_install_started", {
+    command,
+    auth_mode: auth,
+    scope: scopeOf(options),
+    interactive: isInteractive(),
+  });
+}
+
 export async function runConnect(
   options: SgConnectOptions,
   deps: SgCommandDeps,
@@ -526,6 +572,7 @@ export async function runConnect(
   if (auth !== "apikey" && auth !== "grant" && auth !== "oauth") {
     fail(`--auth must be apikey, grant or oauth, got ${options.auth}`);
   }
+  await trackStarted("connect", auth, options);
   warnProjectScope(options);
 
   let target: SgInstallTarget;
@@ -564,6 +611,7 @@ export async function runConnect(
       );
     }
     target = {
+      authMode: "oauth",
       apiBase: options.apiBase ?? env.apiBase,
       org,
       headers: [],
@@ -591,7 +639,7 @@ const SUGGESTED_PROMPTS = [
 
 /** Agent pick, server entry, skills and the closing note: everything after the credential. */
 async function installServerAndSkills(
-  { apiBase, org, headers, allowed }: SgInstallTarget,
+  { authMode, apiBase, org, headers, allowed }: SgInstallTarget,
   options: SgConnectOptions,
   deps: SgCommandDeps,
 ): Promise<void> {
@@ -620,6 +668,17 @@ async function installServerAndSkills(
     const results = installSkills(installed, scope, process.cwd());
     reportSkills(results, scope);
   }
+  // Funnel step 3: at least one agent has the server.
+  void track("mcp_install_completed", {
+    auth_mode: authMode,
+    agents: installed,
+    agent_count: installed.length,
+    failed_agent_count: outcome.results.size - installed.length,
+    scope,
+    skills_installed: !options.skipSkills,
+    sg_org: org,
+    sg_region: regionOf(apiBase),
+  });
 
   p.note(
     [
@@ -650,6 +709,7 @@ export async function runLogin(
   if (auth !== "apikey" && auth !== "grant") {
     fail(`--auth must be apikey, grant or oauth, got ${options.auth}`);
   }
+  await trackStarted("login", auth, options);
   // login always signs in afresh, so a grant login always asks for consent again.
   const grant = auth === "grant";
   const credentials = grant

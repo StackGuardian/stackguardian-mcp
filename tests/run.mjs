@@ -25,6 +25,7 @@ const UNIT = [
   "tests/sg-auth.test.ts",
   "tests/sg-oauth.test.ts",
   "tests/sg-skills.test.ts",
+  "tests/sg-telemetry.test.ts",
 ];
 const E2E = [
   "tests/e2e/install.test.ts",
@@ -54,6 +55,8 @@ const env = {
   CODEX_HOME: join(home, ".codex"),
   APPDATA: join(home, "AppData", "Roaming"),
   LOCALAPPDATA: join(home, "AppData", "Local"),
+  // Test runs must not land in the product analytics.
+  DO_NOT_TRACK: "1",
 };
 
 let failures = 0;
