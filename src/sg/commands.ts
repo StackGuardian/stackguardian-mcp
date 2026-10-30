@@ -48,7 +48,7 @@ import {
   removeSkills,
   skillsStatus,
 } from "./skills.js";
-import { track } from "./telemetry.js";
+import { oauthFailureReason, track } from "./telemetry.js";
 import type { InstallOutcome, MainOptions } from "./types.js";
 
 export interface SgAuthOptions {
@@ -131,8 +131,11 @@ function regionOf(apiBase: string): string {
 }
 
 /** Funnel step 2: a credential is in hand, fresh or reused from an earlier run. */
-function trackLoggedIn(credentials: SgCredentials, reused: boolean): void {
-  void track("mcp_install_logged_in", {
+async function trackLoggedIn(
+  credentials: SgCredentials,
+  reused: boolean,
+): Promise<void> {
+  await track("mcp_install_logged_in", {
     auth_mode: credentials.authType,
     reused_saved_credential: reused,
     sg_org: credentials.org,
@@ -225,7 +228,7 @@ async function credentialsFromToken(
   p.log.success(
     `Saved credentials for ${chalk.cyan(org)} to ${shortenHome(path)}`,
   );
-  trackLoggedIn(credentials, false);
+  await trackLoggedIn(credentials, false);
   return credentials;
 }
 
@@ -274,7 +277,7 @@ async function credentialsFromGrant(
     p.log.info(
       `Using the saved grant for ${chalk.cyan(saved.org)} (${saved.dashboardUrl || saved.apiBase}). Run ${chalk.cyan(`${CLI_COMMAND} logout`)} first to request a new one.`,
     );
-    trackLoggedIn(saved, true);
+    await trackLoggedIn(saved, true);
     return saved;
   }
 
@@ -313,7 +316,7 @@ async function credentialsFromGrant(
         error instanceof LoginError
           ? error.code
           : error instanceof OAuthError
-            ? error.error
+            ? oauthFailureReason(error.error)
             : "error",
       sg_region: regionOf(apiBase),
     });
@@ -342,7 +345,7 @@ async function credentialsFromGrant(
   };
   const path = writeCredentials(credentials);
   p.log.info(`Credentials saved to ${shortenHome(path)}`);
-  trackLoggedIn(credentials, false);
+  await trackLoggedIn(credentials, false);
   return credentials;
 }
 
@@ -379,7 +382,7 @@ export async function resolveCredentials(
       p.log.info(
         `Using saved credentials for ${chalk.cyan(saved.org)} (${saved.dashboardUrl || saved.apiBase}). Run ${chalk.cyan(`${CLI_COMMAND} login`)} to switch.`,
       );
-      trackLoggedIn(saved, true);
+      await trackLoggedIn(saved, true);
       return saved;
     }
   }
@@ -664,18 +667,22 @@ async function installServerAndSkills(
   if (installed.length === 0) return;
   const scope = outcome.routing.get(installed[0]!) ?? scopeOf(options);
 
-  if (!options.skipSkills) {
-    const results = installSkills(installed, scope, process.cwd());
-    reportSkills(results, scope);
-  }
+  const skillResults = options.skipSkills
+    ? []
+    : installSkills(installed, scope, process.cwd());
+  if (!options.skipSkills) reportSkills(skillResults, scope);
+  const skillsInstalled = skillResults.filter(
+    (r) => !r.error && r.mode !== "skipped",
+  ).length;
   // Funnel step 3: at least one agent has the server.
-  void track("mcp_install_completed", {
+  await track("mcp_install_completed", {
     auth_mode: authMode,
     agents: installed,
     agent_count: installed.length,
     failed_agent_count: outcome.results.size - installed.length,
     scope,
-    skills_installed: !options.skipSkills,
+    skills_installed: skillsInstalled > 0,
+    failed_skill_count: skillResults.filter((r) => r.error).length,
     sg_org: org,
     sg_region: regionOf(apiBase),
   });

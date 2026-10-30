@@ -1,12 +1,15 @@
 #!/usr/bin/env tsx
 import assert from "node:assert";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { createServer, type AddressInfo, type Socket } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   anonymousId,
   buildPayload,
   isTelemetryDisabled,
+  oauthFailureReason,
+  send,
   track,
 } from "../src/sg/telemetry.js";
 
@@ -91,6 +94,39 @@ await test("track resolves without sending when opted out", async () => {
   } finally {
     if (before === undefined) delete process.env.DO_NOT_TRACK;
     else process.env.DO_NOT_TRACK = before;
+  }
+});
+
+await test("OAuth failure reasons keep standard codes only", () => {
+  assert.strictEqual(oauthFailureReason("access_denied"), "access_denied");
+  assert.strictEqual(oauthFailureReason("invalid_grant"), "invalid_grant");
+  assert.strictEqual(
+    oauthFailureReason("someone@example.com /home/me sgu_token"),
+    "oauth_error",
+  );
+});
+
+await test("a stalled endpoint is cut off and its socket closed", async () => {
+  // Accepts TCP but never answers, so the TLS handshake hangs.
+  let socketClosed!: Promise<void>;
+  const server = createServer((socket: Socket) => {
+    socket.resume();
+    socketClosed = new Promise((resolve) => socket.on("close", resolve));
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const { port } = server.address() as AddressInfo;
+  try {
+    const started = Date.now();
+    await send(`https://127.0.0.1:${port}/`, "{}", 300);
+    assert.ok(Date.now() - started < 2_000, "send outlived its timeout");
+    await Promise.race([
+      socketClosed,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("socket left open")), 1_000),
+      ),
+    ]);
+  } finally {
+    server.close();
   }
 });
 

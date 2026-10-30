@@ -309,10 +309,10 @@ The connect flow and `login` send four events to StackGuardian's PostHog (EU), s
 
 - `mcp_install_started`: the command and the sign-in mode.
 - `mcp_install_logged_in`: the organization and region you signed in to, and whether a saved credential was reused.
-- `mcp_install_login_failed`: the error code when the browser sign-in does not finish (for example `cancelled` or `timeout`).
-- `mcp_install_completed`: the agents that got the server, the scope, the organization and region.
+- `mcp_install_login_failed`: why the browser sign-in did not finish: `cancelled`, `timeout` or a standard OAuth error code such as `access_denied`. Any other code is sent as `oauth_error`.
+- `mcp_install_completed`: the agents that got the server, the scope, whether the skills installed and how many failed, the organization and region.
 
-Each event also carries the CLI version, OS, CPU architecture and whether it ran in CI. Events are tied to a random ID stored in `~/.config/add-sg-mcp/telemetry-id`. They never include the API key, the grant token, file paths or error messages. A failed or slow request never stops the install.
+Each event also carries the CLI version, OS, CPU architecture and whether it ran in CI. Events are tied to a random ID stored in `~/.config/add-sg-mcp/telemetry-id`. They never include the API key, the grant token, file paths or error messages. Sending takes at most two seconds per run in total, and a failed or slow request never stops the install.
 
 To turn it off, set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1`.
 

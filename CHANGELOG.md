@@ -2,7 +2,7 @@
 
 ## 1.3.0
 
-- The connect flow and `login` now send usage events to StackGuardian when an install starts, when you sign in and when it completes, so we can see where installs stop. They are tied to a random ID on your machine and carry your organization and region, never the key or the grant token. Set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1` to turn them off. See "Usage analytics" in the README.
+- The connect flow and `login` now send usage events to StackGuardian when an install starts, when you sign in and when it completes, so we can see where installs stop. They are tied to a random ID on your machine and carry your organization and region, never the key or the grant token. Sending adds at most two seconds to a run. Set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1` to turn them off. See "Usage analytics" in the README.
 
 ## 1.2.0
 
