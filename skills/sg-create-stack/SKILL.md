@@ -87,7 +87,8 @@ The dashboard offers these **stack-wide** (applied to every workflow) or
    `connectorId` is required; the kind is resolved live. A per-workflow
    connector goes in that workflow's entry as `workflows[].deployment` and
    overrides the stack-wide one for that workflow only. Omitting both keeps
-   whatever each workflow template declares.
+   whatever each workflow template declares. No suitable connector? Continue
+   with the `sg-create-connector` skill, then come back with its connector id.
 2. Environment variables: collect each as `{varName, textValue}` or
    `{varName, secretId}` (`/secrets/<name>`), exactly one of the two.
    Stack-wide ones go in `environmentVariables`; per-workflow ones in
