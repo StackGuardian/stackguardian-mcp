@@ -66,6 +66,8 @@ into the other:
      `source.gitAuthRef="/integrations/<id>"` (use the full
      `/integrationgroups/<group>/integrations/<id>` form if the connector is
      group-managed or the tool reports an ambiguity with `candidates`).
+     No suitable connector? Continue with the `sg-create-connector` skill,
+     then come back with its connector id.
      Setting `gitAuthRef` implies private — no need to also send
      `isPrivateRepo`. For a plain git host with no connector, a
      `/secrets/<name>` token is the alternative (GIT_OTHER hosts accept
@@ -121,6 +123,8 @@ into the other:
    `deployment.connectorKind` unless a returned error asks for it. Find
    connectors via
    `search_orchestrator_resources(resourceTypes=['INTEGRATION.CLOUD'])`.
+   No suitable connector? Continue with the `sg-create-connector` skill, then
+   come back with its connector id.
 2. Ask whether to add environment variables. Collect each as
    `{varName, textValue}` (plain text) or `{varName, secretId}` where
    `secretId` is a `/secrets/<name>` vault reference — exactly one of the
@@ -295,7 +299,16 @@ parameter entirely otherwise (its defaults still apply omitted):
 - `githubComSync`: advanced GitHub PR-trigger behavior, e.g.
   `{"pull_request_opened": {"createWfRun": {"enabled": true}}}`. Free-form and
   NOT validated by the platform, so a wrong key fails silently — most
-  workflows omit it entirely.
+  workflows omit it entirely. For push/PR/tag triggers use `vcsTriggers`.
+- `vcsTriggers`: git events that start runs, e.g. `{"onPush": true,
+  "pullRequests": "trackedBranch", "trackedBranch": "main",
+  "approvalPreApply": true}`. **Git source only**, and the repo must be private
+  with `gitAuthRef` set (on GitLab, Bitbucket and Azure DevOps, a VCS
+  connector rather than a stored token). PR runs only plan; push and tag runs
+  apply unless `planOnly` or `approvalPreApply` is set. `fileFilters` (fnmatch
+  globs such as `["stacks/vpc/*"]`) limits runs to matching changes. The triggers are
+  registered right after the create; if that fails, the workflow still exists
+  and the response's `warnings` says how to retry.
 
 Confirm a plain-language summary of everything collected with the user, then
 call `create_workflow` with all parameters.

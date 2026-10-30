@@ -59,7 +59,7 @@ workflow-step-templates source.
 | `run_pre_init/pre_plan/post_plan_hooks_on_drift` | run those hooks during drift runs too (default false) |
 | `wf_step_template_revision_id` | `workflow_from_template` only — custom runtime image |
 
-Not settable: `tfvarsFilePath`, `terraformApplyOptions`. For a tfvars file in the repo use
+Not settable: `terraformApplyOptions`. For a tfvars file in the repo use
 `terraform_plan_options = "-var-file=env/prod.tfvars"` (only plan takes var files).
 `terraform_config` is replaced **whole** on every update, which the provider handles by always
 sending the full object.

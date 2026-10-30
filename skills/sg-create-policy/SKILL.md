@@ -40,7 +40,9 @@ Ask what the user wants to enforce. Map it to a rule source:
    `tirith.json` (`kind: SG_POLICY_FRAMEWORK`). Ask whether the repo is
    private; if so, the credential is a connector or secret POINTER —
    offer the org's VCS connectors (the tool returns `availableVcsConnectors`
-   on a miss). Never put a raw token in `auth`.
+   on a miss). No suitable connector? Continue with the `sg-create-connector`
+   skill, then come back with its connector id. Never put a raw token in
+   `auth`.
 
 Rule `name` is a slug (letters, digits, `_`, `-`).
 
