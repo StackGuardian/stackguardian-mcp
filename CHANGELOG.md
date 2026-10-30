@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+- The connect flow and `login` now send usage events to StackGuardian when an install starts, when you sign in and when it completes, so we can see where installs stop. They are tied to a random ID on your machine and carry your organization and region, never the key or the grant token. Sending adds at most two seconds to a run. Set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1` to turn them off. See "Usage analytics" in the README.
+
 ## 1.2.0
 
 - The npm package is now `@stackguardian/mcp-wizard`: run `npx @stackguardian/mcp-wizard`. `add-sg-mcp` stops at 1.1.0. Your saved sign-in and installed skills carry over, so there is nothing to redo. The standalone executable and the install scripts keep the `add-sg-mcp` name.
