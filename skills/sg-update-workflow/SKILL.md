@@ -80,9 +80,10 @@ Ask the user what they want to change, then build ONLY those parameters:
   either way.)
 - **Cloud connector** (`deployment`) — `{"connectorId": "/integrations/<id>"}`.
   Find connectors via
-  `search_orchestrator_resources(resourceTypes=['INTEGRATION.CLOUD'])`. The
-  connector's kind is resolved live; the workflow's existing deploy-profile name
-  is kept unless you pass `deployment.profileName`.
+  `search_orchestrator_resources(resourceTypes=['INTEGRATION.CLOUD'])`; if
+  none fits, see **No connector yet**. The connector's kind is resolved live;
+  the workflow's existing deploy-profile name is kept unless you pass
+  `deployment.profileName`.
 - **Environment variables** (`environmentVariables`) — a list of
   `{varName, textValue}` or `{varName, secretId}` entries. These are UPSERTED by
   name: entries you pass add or replace matching vars; every existing var you
@@ -202,6 +203,28 @@ Ask the user what they want to change, then build ONLY those parameters:
 Summarize, in plain language, exactly what will change (and note that everything
 else stays the same). On confirmation, call `update_workflow` with `wfGrp`,
 `resourceName`, the optional `stack`, and only the fields being changed.
+
+## No connector yet
+
+Connectors can't be created with the MCP tools. When a connector search returns
+nothing, or nothing for the cloud account or git host the user needs, stop and
+give the user the settings page as a markdown link, so they can click through,
+then wait until they say the connector is added:
+
+- Cloud: `[Add a cloud connector](https://<dashboard>/orchestrator/orgs/<org>/settings/cloud-providers)`
+- Git: `[Add a git connector](https://<dashboard>/orchestrator/orgs/<org>/settings/vcs-providers)`
+
+`<org>` is what follows `/orgs/` in `source.filters.orgId` of any search
+response (`/orgs/acme` → `acme`). `<dashboard>` is `app.stackguardian.io` for
+Europe or `us.stackguardian.io` for the United States: match the region of the
+StackGuardian MCP server URL (`api.app.stackguardian.io` or
+`api.us.stackguardian.io`), and give both links if you can't tell. When the
+user confirms, search again.
+
+Never work around a missing connector by switching to another StackGuardian
+organization or MCP server, even one that has a matching connector. A
+different organization has different credentials, policies and people; switch
+only when the user explicitly asks for that organization.
 
 ## Error handling (teaching errors)
 
