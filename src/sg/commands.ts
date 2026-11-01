@@ -634,10 +634,10 @@ export async function runConnect(
 }
 
 const SUGGESTED_PROMPTS = [
-  "Summarize my StackGuardian security posture and top misconfigurations",
-  "Why did my latest workflow run fail? Show me the logs",
-  "Create a workflow from a marketplace template for an S3 bucket",
-  "Upgrade my workflows that use an outdated template version",
+  "Deploy the Terraform in this repo and show me the plan before apply",
+  "Create an OpenTofu workflow for this repo that waits for my approval",
+  "Run our Ansible playbook as a StackGuardian workflow",
+  "Why did my latest deployment fail? Show me the logs",
 ];
 
 /** Agent pick, server entry, skills and the closing note: everything after the credential. */
