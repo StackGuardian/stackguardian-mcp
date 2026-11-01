@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1
+
+- Node.js older than 18 now gets a clear error as soon as the tool starts, with the version you are running and how to fix it. Before, npm printed an easy-to-miss engine warning and the tool carried on: the browser sign-in then failed with `fetch is not defined`, after you had already approved access. This also stops `--token` installs on those versions, which happened to work but were never supported. Node.js 18 and 20 keep working.
+
 ## 1.3.0
 
 - The connect flow and `login` now send usage events to StackGuardian when an install starts, when you sign in and when it completes, so we can see where installs stop. They are tied to a random ID on your machine and carry your organization and region, never the key or the grant token. Sending adds at most two seconds to a run. Set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1` to turn them off. See "Usage analytics" in the README.
