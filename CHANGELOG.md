@@ -4,6 +4,7 @@
 
 - The connect flow and `login` now send usage events to StackGuardian when an install starts, when you sign in and when it completes, so we can see where installs stop. They are tied to a random ID on your machine and carry your organization and region, never the key or the grant token. Sending adds at most two seconds to a run. Set `DO_NOT_TRACK=1` or `SG_NO_TELEMETRY=1` to turn them off. See "Usage analytics" in the README.
 - The prompts suggested in "Next steps" start from your own code: deploy the Terraform in the current repository, create an OpenTofu workflow that waits for your approval, run an Ansible playbook as a workflow, and find out why a deployment failed. Before, they suggested summarizing your security posture, deploying a library template and upgrading template versions.
+- When your organization has no cloud or git connector for what you're deploying, the `sg-create-workflow`, `sg-create-stack` and `sg-update-workflow` skills give you a link to the connector settings page for your organization and region, and wait while you add one. They no longer suggest continuing in a different organization. The workflow-groups link now points to your region's dashboard too; before, it always pointed to the Europe dashboard.
 
 ## 1.2.0
 
