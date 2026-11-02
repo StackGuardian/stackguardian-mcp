@@ -2,7 +2,7 @@
 
 ## 1.3.1
 
-- Node.js older than 18 now gets a clear error as soon as the tool starts, with the version you are running and how to fix it. Before, npm printed an easy-to-miss engine warning and the tool carried on: the browser sign-in then failed with `fetch is not defined`, after you had already approved access. This also stops `--token` installs on those versions, which happened to work but were never supported. Node.js 18 and 20 keep working.
+- Node.js older than 18 now gets a clear error as soon as the tool starts, with the version you are running and the commands to install the standalone executable, which does not need Node.js. Before, npm printed an easy-to-miss engine warning and the tool carried on: the browser sign-in then failed with `fetch is not defined`, after you had already approved access. This also stops `--token` installs on those versions, which happened to work but were never supported. Node.js 18 and 20 keep working.
 
 ## 1.3.0
 

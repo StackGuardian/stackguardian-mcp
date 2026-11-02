@@ -36,6 +36,22 @@ test("Node versions below the minimum get an error naming both versions", () => 
   }
 });
 
+test("the error gives the standalone install commands from the README", () => {
+  const error = nodeVersionError("16.20.2");
+  assert.ok(error);
+  const readme = readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), "..", "README.md"),
+    "utf-8",
+  );
+  for (const command of [
+    "curl -fsSL https://dl.stackguardian.io/add-sg-mcp/install.sh | sh",
+    "irm https://dl.stackguardian.io/add-sg-mcp/install.ps1 | iex",
+  ]) {
+    assert.ok(error.includes(command), `error is missing: ${command}`);
+    assert.ok(readme.includes(command), `README is missing: ${command}`);
+  }
+});
+
 test("Node 18 and later pass, including the EOL 18 and 20", () => {
   for (const version of ["18.0.0", "18.20.8", "20.20.2", "22.23.4", "26.0.0"]) {
     assert.strictEqual(nodeVersionError(version), null);
