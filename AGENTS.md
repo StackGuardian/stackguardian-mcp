@@ -6,7 +6,8 @@ A CLI (published as `@stackguardian/mcp-wizard`, command `add-sg-mcp`) that conn
 
 - `src/sg/` — everything StackGuardian-specific: `preset.ts` (URLs, header, validation), `credentials.ts` (credential store), `auth.ts` (pieces the browser sign-in shares: state, callback page, URL opener), `oauth.ts` (grant sign-in through the OAuth broker), `skills.ts` (skills installer), `commands.ts` (Commander wiring for the default connect flow, `login`, `logout`, `status`, `remove`), `types.ts`.
 - `src/agents.ts`, `src/installer.ts`, `src/formats/*`, `src/schema.ts`, `src/reader.ts`, `src/opencode-config.ts`, `src/source-parser.ts`, `src/template.ts` — upstream, kept byte-identical so `git merge upstream/main` stays cheap. Do not put StackGuardian logic there.
-- `src/index.ts` — the bin. Upstream's `main()` install flow plus the registration of the `sg` commands (`registerSgCommands`, dependencies injected to avoid an import cycle).
+- `src/cli.ts` — the npm bin: refuses Node.js older than `engines`, then loads `src/index.ts`. The standalone executable builds from `src/index.ts` directly, since it brings its own runtime.
+- `src/index.ts` — the CLI. Upstream's `main()` install flow plus the registration of the `sg` commands (`registerSgCommands`, dependencies injected to avoid an import cycle).
 - `skills/` — the bundled `SKILL.md` folders shipped in the npm package.
 - `install.sh`, `install.ps1` — installers for the standalone executables that `.github/workflows/binaries.yml` builds (`bun run build:binary`), uploads to `dl.stackguardian.io` and attaches to each GitHub release.
 - `docs/superpowers/specs/` and `docs/superpowers/plans/` — design and implementation plan.

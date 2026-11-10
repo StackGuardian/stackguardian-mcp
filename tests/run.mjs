@@ -26,6 +26,7 @@ const UNIT = [
   "tests/sg-oauth.test.ts",
   "tests/sg-skills.test.ts",
   "tests/sg-telemetry.test.ts",
+  "tests/sg-node-version.test.ts",
 ];
 const E2E = [
   "tests/e2e/install.test.ts",
