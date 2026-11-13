@@ -62,11 +62,12 @@ into the other:
    - **Private**: the platform needs credentials to clone. List the org's
      VCS connectors with
      `search_orchestrator_resources(resourceTypes=['INTEGRATION.VCS'])`,
-     present them (name + provider kind; if there is none, see **No
-     connector yet**), and pass the pick as
+     present them (name + provider kind), and pass the pick as
      `source.gitAuthRef="/integrations/<id>"` (use the full
      `/integrationgroups/<group>/integrations/<id>` form if the connector is
      group-managed or the tool reports an ambiguity with `candidates`).
+     No suitable connector? Continue with the `sg-create-connector` skill,
+     then come back with its connector id.
      Setting `gitAuthRef` implies private — no need to also send
      `isPrivateRepo`. For a plain git host with no connector, a
      `/secrets/<name>` token is the alternative (GIT_OTHER hosts accept
@@ -99,8 +100,7 @@ into the other:
    - **Create a new group**: pass `createNewWorkflowGroup=true` ONLY when the
      user explicitly asks for a brand-new group.
    - **Browse in the dev portal**: share the workflow-groups page —
-     `https://<dashboard>/orchestrator/orgs/<org>?tab=workflowGroups`
-     (`<dashboard>` and `<org>` as in **No connector yet**).
+     `https://app.stackguardian.io/orchestrator/orgs/<org>?tab=workflowGroups`.
    This step is mandatory — never call `create_workflow` without a
    user-confirmed `wfGrp`.
    **Nested groups are accepted** — `PROD/eu-central-1` is a real group that
@@ -123,7 +123,8 @@ into the other:
    `deployment.connectorKind` unless a returned error asks for it. Find
    connectors via
    `search_orchestrator_resources(resourceTypes=['INTEGRATION.CLOUD'])`.
-   If none fits, see **No connector yet**.
+   No suitable connector? Continue with the `sg-create-connector` skill, then
+   come back with its connector id.
 2. Ask whether to add environment variables. Collect each as
    `{varName, textValue}` (plain text) or `{varName, secretId}` where
    `secretId` is a `/secrets/<name>` vault reference — exactly one of the
@@ -298,32 +299,19 @@ parameter entirely otherwise (its defaults still apply omitted):
 - `githubComSync`: advanced GitHub PR-trigger behavior, e.g.
   `{"pull_request_opened": {"createWfRun": {"enabled": true}}}`. Free-form and
   NOT validated by the platform, so a wrong key fails silently — most
-  workflows omit it entirely.
+  workflows omit it entirely. For push/PR/tag triggers use `vcsTriggers`.
+- `vcsTriggers`: git events that start runs, e.g. `{"onPush": true,
+  "pullRequests": "trackedBranch", "trackedBranch": "main",
+  "approvalPreApply": true}`. **Git source only**, and the repo must be private
+  with `gitAuthRef` set (on GitLab, Bitbucket and Azure DevOps, a VCS
+  connector rather than a stored token). PR runs only plan; push and tag runs
+  apply unless `planOnly` or `approvalPreApply` is set. `fileFilters` (fnmatch
+  globs such as `["stacks/vpc/*"]`) limits runs to matching changes. The triggers are
+  registered right after the create; if that fails, the workflow still exists
+  and the response's `warnings` says how to retry.
 
 Confirm a plain-language summary of everything collected with the user, then
 call `create_workflow` with all parameters.
-
-## No connector yet
-
-Connectors can't be created with the MCP tools. When a connector search returns
-nothing, or nothing for the cloud account or git host the user needs, stop and
-give the user the settings page as a markdown link, so they can click through,
-then wait until they say the connector is added:
-
-- Cloud: `[Add a cloud connector](https://<dashboard>/orchestrator/orgs/<org>/settings/cloud-providers)`
-- Git: `[Add a git connector](https://<dashboard>/orchestrator/orgs/<org>/settings/vcs-providers)`
-
-`<org>` is what follows `/orgs/` in `source.filters.orgId` of any search
-response (`/orgs/acme` → `acme`). `<dashboard>` is `app.stackguardian.io` for
-Europe or `us.stackguardian.io` for the United States: match the region of the
-StackGuardian MCP server URL (`api.app.stackguardian.io` or
-`api.us.stackguardian.io`), and give both links if you can't tell. When the
-user confirms, search again.
-
-Never work around a missing connector by switching to another StackGuardian
-organization or MCP server, even one that has a matching connector. A
-different organization has different credentials, policies and people; switch
-only when the user explicitly asks for that organization.
 
 ## Error handling (teaching errors)
 
