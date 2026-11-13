@@ -65,8 +65,7 @@ step (Step F).
      silently create a mistyped group on stack create — that is why the tool
      refuses an unknown group unless this flag is set.
    - **Browse in the dev portal**: share the workflow-groups page —
-     `https://<dashboard>/orchestrator/orgs/<org>?tab=workflowGroups`
-     (`<dashboard>` and `<org>` as in **No connector yet**).
+     `https://app.stackguardian.io/orchestrator/orgs/<org>?tab=workflowGroups`.
    This step is mandatory — never call `create_stack` without a
    user-confirmed group.
 2. Ask the user for:
@@ -83,12 +82,13 @@ The dashboard offers these **stack-wide** (applied to every workflow) or
 
 1. Cloud connector: skip if none is needed (omit `deployment`). Otherwise
    find connectors via
-   `search_orchestrator_resources(resourceTypes=['INTEGRATION.CLOUD'])` (if
-   none fits, see **No connector yet**) and build `deployment = {"connectorId": "/integrations/<id>"}` — only
+   `search_orchestrator_resources(resourceTypes=['INTEGRATION.CLOUD'])` and
+   build `deployment = {"connectorId": "/integrations/<id>"}` — only
    `connectorId` is required; the kind is resolved live. A per-workflow
    connector goes in that workflow's entry as `workflows[].deployment` and
    overrides the stack-wide one for that workflow only. Omitting both keeps
-   whatever each workflow template declares.
+   whatever each workflow template declares. No suitable connector? Continue
+   with the `sg-create-connector` skill, then come back with its connector id.
 2. Environment variables: collect each as `{varName, textValue}` or
    `{varName, secretId}` (`/secrets/<name>`), exactly one of the two.
    Stack-wide ones go in `environmentVariables`; per-workflow ones in
@@ -158,28 +158,6 @@ deploy: run the stack's *apply* action from the dashboard link, or run each
 workflow with `create_workflow_run` in the order the stack's Actions define
 (each `data.workflows[].SubResourceId` is the id those tools take; ask
 before running — `action` is required there and always a user decision).
-
-## No connector yet
-
-Connectors can't be created with the MCP tools. When a connector search returns
-nothing, or nothing for the cloud account or git host the user needs, stop and
-give the user the settings page as a markdown link, so they can click through,
-then wait until they say the connector is added:
-
-- Cloud: `[Add a cloud connector](https://<dashboard>/orchestrator/orgs/<org>/settings/cloud-providers)`
-- Git: `[Add a git connector](https://<dashboard>/orchestrator/orgs/<org>/settings/vcs-providers)`
-
-`<org>` is what follows `/orgs/` in `source.filters.orgId` of any search
-response (`/orgs/acme` → `acme`). `<dashboard>` is `app.stackguardian.io` for
-Europe or `us.stackguardian.io` for the United States: match the region of the
-StackGuardian MCP server URL (`api.app.stackguardian.io` or
-`api.us.stackguardian.io`), and give both links if you can't tell. When the
-user confirms, search again.
-
-Never work around a missing connector by switching to another StackGuardian
-organization or MCP server, even one that has a matching connector. A
-different organization has different credentials, policies and people; switch
-only when the user explicitly asks for that organization.
 
 ## Error handling (teaching errors)
 
