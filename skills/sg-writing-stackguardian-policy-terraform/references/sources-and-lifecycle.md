@@ -87,7 +87,7 @@ policy_vcs_config = {
   resolved per run). The id is **not checked at create**: a wrong or deleted template breaks every
   run in scope (`'<id>' not found. Make sure that it is registered in Marketplace`). Check the
   revision exists first (e.g. `aws-best-practices-all` has revisions 1 and 2, not 3):
-  `curl -H "Authorization: apikey $KEY" -H "x-sg-orgid: <your-org>" "$STACKGUARDIAN_API_URI/api/v1/templatetypes/IAC_POLICY/stackguardian/aws-best-practices-all:2/"`.
+  `curl -H "Authorization: apikey YOUR_API_KEY" -H "x-sg-orgid: <your-org>" "$STACKGUARDIAN_API_URI/api/v1/templatetypes/IAC_POLICY/stackguardian/aws-best-practices-all:2/"`.
 - No subscription is required; the template must be public, yours, or shared with you.
 - `use_marketplace_template = true` without `policy_template_id` → `{"policyTemplateId": ["required
   when useMarketplaceTemplate"]}`; `false` without `custom_source` → `{"customSource": ["required

@@ -97,7 +97,7 @@ To see what a marketplace revision contains (repo, ref, working dir, inputs, Ter
 read it with **your** org in the header — this works although the provider's call does not:
 
 ```bash
-curl -s -H "Authorization: apikey $STACKGUARDIAN_API_KEY" -H "x-sg-orgid: <your-org>" \
+curl -s -H "Authorization: apikey YOUR_API_KEY" -H "x-sg-orgid: <your-org>" \
   "$STACKGUARDIAN_API_URI/api/v1/templatetypes/IAC/stackguardian/aws-s3-demo-website:16/"
 # .msg.RuntimeSource = git source, .msg.InputSchemas[].encodedData = base64 JSON Schema
 ```
